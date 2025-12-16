@@ -67,3 +67,14 @@ Berikut adalah daftar endpoint yang tersedia:
 ## 📂 Struktur Folder
 
 Struktur project disusun secara modular di dalam folder `src`:
+
+P7-Hardening-NIM/ 
+├── src/ │ 
+            ├── controllers/ # Logika Bisnis │ 
+            ├── middlewares/ # Error Handler, Logger, Limiter │ 
+            ├── routes/ # Definisi URL/Endpoint │ 
+            ├── data/ # Mock Data Movies │ 
+            └── app.js # Entry Point Server 
+├── .env # Konfigurasi Environment 
+├── .env.example # Contoh Konfigurasi 
+└── package.json
