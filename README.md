@@ -1,63 +1,69 @@
-# UTS Web Service Engineering
-# Project: `UTS-WSE-230104040129`
+# P7 - Hardening Web Service (Movies API)
 
-Ini adalah proyek RESTful API yang dibuat untuk memenuhi Ujian Tengah Semester (UTS) mata kuliah **Web Service Engineering (WSE)**.
+Project ini adalah hasil praktikum Web Service Engineering Minggu ke-7. Fokus utama project ini adalah meningkatkan keamanan (*hardening*), observabilitas (*logging*), dan manajemen error pada RESTful API Movies yang telah dibuat sebelumnya.
 
-API ini dibangun menggunakan **Node.js** dan **Express.js** dan menerapkan **7 Prinsip RESTful API**. Sesuai ketentuan, API ini tidak menggunakan database eksternal dan mengelola data *dummy* secara internal.
+## 🚀 Fitur Utama
+
+Project ini telah dilengkapi dengan *middleware* dan konfigurasi standar industri:
+
+### 1. Keamanan (Security)
+* **Helmet:** Mengamankan HTTP Headers dari kerentanan umum.
+* **CORS:** Membatasi akses resource hanya dari domain yang diizinkan (Origin Restriction).
+* **Rate Limiting:** Mencegah serangan *Brute Force* dan *DDoS* dengan membatasi jumlah request per IP (Max 100 request/15 menit).
+
+### 2. Observabilitas (Logging)
+* **Morgan:** Mencatat log setiap request yang masuk (Method, URL, Status, Response Time) ke console untuk memudahkan debugging.
+* **Health Check Endpoint:** Endpoint khusus (`/api/health`) untuk memantau status *uptime* server.
+
+### 3. Arsitektur & Error Handling
+* **Global Error Handler:** Menangkap semua error sistem dan menampilkannya dalam format JSON yang rapi dan konsisten.
+* **Environment Variables:** Konfigurasi sensitif (Port, Limit, Origin) dipisah menggunakan file `.env`.
+* **Modular Code:** Pemisahan *routes*, *controllers*, dan *middlewares* di dalam folder `src/`.
 
 ---
 
-## 👨‍💻 Identitas Mahasiswa
+## 🛠️ Instalasi & Cara Menjalankan
 
-* **Nama:** `Muhammad Lutfan`
-* **NIM:** `230104040129`
+Ikuti langkah berikut untuk menjalankan project di lokal:
 
-## 🎬 Resource yang Dikelola
-
-Berdasarkan digit akhir NIM (**9**), *resource* yang dikelola oleh API ini adalah **`movies`**.
-
-* **Resource:** `movies`
-* **Field Wajib:** `title`, `genre`, `year`
-
----
-
-## 🚀 Cara Menjalankan Proyek
-
-Pastikan Anda memiliki Node.js dan NPM terinstal di sistem Anda.
-
-1.  **Clone repositori ini (jika diunggah) atau buka folder proyek.**
-
-2.  **Instal semua *dependencies*:**
+1.  **Clone Repository** (atau ekstrak folder project)
+2.  **Install Dependencies**
     ```bash
     npm install
     ```
-
-3.  **Jalankan server (mode pengembangan):**
-    Server akan berjalan menggunakan `nodemon` di `http://localhost:3000`.
-    ```bash
-    npm run dev
+3.  **Konfigurasi Environment**
+    Buat file `.env` di root folder, lalu salin konfigurasi berikut:
+    ```env
+    PORT=3000
+    NODE_ENV=development
+    RATE_LIMIT_WINDOW_MS=900000
+    RATE_LIMIT_MAX=100
+    ALLOWED_ORIGIN=http://localhost:5173
     ```
+4.  **Jalankan Server**
+    ```bash
+    npm start
+    ```
+    Output sukses: `✅ Server is running securely on port 3000`
 
 ---
 
-## 🗺️ Daftar Endpoint API
+## 🔌 API Endpoints
 
-API ini mengimplementasikan 5 endpoint CRUD lengkap untuk *resource* `movies` dan 1 endpoint `info`.
+Berikut adalah daftar endpoint yang tersedia:
 
-| Method | Endpoint | Deskripsi | Status Sukses | Status Gagal |
-| :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/api/info` | Menampilkan informasi dan identitas service. | `200 OK` | - |
-| `GET` | `/api/movies` | Mengambil seluruh daftar data *movies*. | `200 OK` | - |
-| `GET` | `/api/movies/:id` | Mengambil data *movie* spesifik berdasarkan `id`. | `200 OK` | `404 Not Found` |
-| `POST` | `/api/movies` | Membuat data *movie* baru. | `201 Created` | `400 Bad Request` |
-| `PUT` | `/api/movies/:id` | Memperbarui data *movie* spesifik berdasarkan `id`. | `200 OK` | `400 Bad Request` / `404 Not Found` |
-| `DELETE` | `/api/movies/:id` | Menghapus data *movie* spesifik berdasarkan `id`. | `200 OK` / `204 No Content` | `404 Not Found` |
+| Method | Endpoint | Deskripsi | Status Code |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/api/health` | Cek status server (Health Check) | 200 |
+| **GET** | `/api/movies` | Mendapatkan semua data film | 200 |
+| **GET** | `/api/movies/:id` | Mendapatkan detail film by ID | 200 / 404 |
+| **POST** | `/api/movies` | Menambah data film baru | 201 / 400 |
+| **PUT** | `/api/movies/:id` | Mengupdate data film | 200 / 404 |
+| **DELETE** | `/api/movies/:id` | Menghapus data film | 204 / 404 |
+| **ANY** | `/api/ngawur` | Test 404 Handler | 404 |
 
 ---
 
-## ✅ Fitur dan Implementasi
+## 📂 Struktur Folder
 
-* **Struktur Modular:** Kode diorganisir dalam struktur `routes`, `controllers`, dan `data`.
-* **Validasi Input:** Terdapat validasi untuk *field* wajib (seperti `title` dan `genre`) pada endpoint `POST` dan `PUT`.
-* **Error Handling:** Menggunakan *status code* HTTP yang tepat (200, 201, 204, 400, 404) untuk menangani respons sukses dan gagal.
-* **JSON Representation:** Semua respons dan *request body* menggunakan format JSON yang konsisten.
+Struktur project disusun secara modular di dalam folder `src`:
